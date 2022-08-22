@@ -1,29 +1,39 @@
-server {
-    listen       {{port}};
-    listen       somename:8080;
-    server_name  somename  alias  another.alias;
+{% for server in servers -%}
+    {% if server.tls != true %}
+        server {
+            listen       {{ server.port }};
+            listen       somename:8080;
+            server_name  somename  alias  another.alias;
 
-    location / {
-        root   html;
-        index  index.html index.htm;
-    }
-}
+            location /{{ server.location }} {
+                root   html;
+                index  index.html index.htm;
+            }
+        }
+    {% else %}
+        server {
+            listen       {{ server.port }} ssl; # 443
+            server_name  {{ server.server_name }};
 
-server {
-    listen       {{port}} ssl; # 443
-    server_name  localhost;
+            ssl_certificate      {{ server.ssl_cert_pem }}; # cert.pem;
+            ssl_certificate_key  {{ server.ssl_cert_key }}; # cert.key;
 
-    ssl_certificate      {{ssl_cert_pem}}; # cert.pem;
-    ssl_certificate_key  {{ssl_cert_key}}; # cert.key;
+            ssl_session_cache    shared:SSL:{{ server.ssl_session_cache_time }}; #1m;
+            ssl_session_timeout  {{ server.ssl_session_timeout }} #5m;
 
-    ssl_session_cache    shared:SSL:{{ssl_session_cache_time}}; #1m;
-    ssl_session_timeout  {{ssl_session_timeout}} #5m;
+            ssl_ciphers  HIGH:!aNULL:!MD5;
+            ssl_prefer_server_ciphers  on;
 
-    ssl_ciphers  HIGH:!aNULL:!MD5;
-    ssl_prefer_server_ciphers  on;
+            {% if server.[].errors %}
+                {% for error in server.[].errors -%}
+                    error_page  {{ error.number }}              {{ error.path }} #/404.html;
+                {%- endfor %}
+            {% endif %}
 
-    location / {
-        root   html;
-        index  index.html index.htm;
-    }
-}
+            location /{{ server.location }} {
+                root   html;
+                index  index.html index.htm;
+            }
+        }
+    {% endif %}
+{%- endfor %}
