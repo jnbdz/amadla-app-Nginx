@@ -1,6 +1,15 @@
 ---
 version: 1
 about:
-  version: 1.0
+  version: 1.0 # Based on Git tags
   description: NGINX is a http/s server that makes it easy to have a reverse proxy
-  
+  authors:
+    - Jean-Nicolas Boulay (JN) <https://jean-nicolas.name>
+  category: Infrastructure
+  tags:
+    - server
+    - http
+    - proxy
+  requires:
+    - ansible
+    - jinja2
