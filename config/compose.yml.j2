@@ -2,16 +2,21 @@
 version: '3'
 volumes:
   nginx_config:
+  nginx_www:
 services:
   nginx:
     image: nginx
     volumes:
-    - nginx_config:/etc/nginx/templates
+    - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+    - nginx_config:/etc/nginx/conf:ro
+    - nginx_www:/etc/nginx/templates:ro
     ports:
-    - "{{port}}:{{port}}"
+    {% for server in servers -%}
+    - "{{ server.internal.port }}:{{ server.port }}"
+    {%- endfor %}
     environment:
     - NGINX_HOST=foobar.com
     - NGINX_PORT={{port}}
-
-#    - ./nginx.conf:/etc/nginx/nginx.conf:ro
-#  command: [nginx-debug, '-g', 'daemon off;']
+    {% if dev.debug == true %}
+    command: [nginx-debug, '-g', 'daemon off;']
+    {% endif %}

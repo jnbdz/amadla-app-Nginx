@@ -5,7 +5,7 @@
             listen       somename:8080;
             server_name  somename  alias  another.alias;
 
-            location /{{ server.location }} {
+            location {{ server.location }} {
                 root   html;
                 index  index.html index.htm;
             }
@@ -30,7 +30,7 @@
                 {%- endfor %}
             {% endif %}
 
-            location /{{ server.location }} {
+            location {{ server.location }} {
                 root   html;
                 index  index.html index.htm;
             }
