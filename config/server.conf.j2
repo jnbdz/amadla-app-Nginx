@@ -1,0 +1,29 @@
+server {
+    listen       {{port}};
+    listen       somename:8080;
+    server_name  somename  alias  another.alias;
+
+    location / {
+        root   html;
+        index  index.html index.htm;
+    }
+}
+
+server {
+    listen       {{port}} ssl; # 443
+    server_name  localhost;
+
+    ssl_certificate      {{ssl_cert_pem}}; # cert.pem;
+    ssl_certificate_key  {{ssl_cert_key}}; # cert.key;
+
+    ssl_session_cache    shared:SSL:{{ssl_session_cache_time}}; #1m;
+    ssl_session_timeout  {{ssl_session_timeout}} #5m;
+
+    ssl_ciphers  HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers  on;
+
+    location / {
+        root   html;
+        index  index.html index.htm;
+    }
+}
