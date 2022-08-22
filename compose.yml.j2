@@ -1,0 +1,14 @@
+---
+version: '3'
+volumes:
+  nginx_config:
+services:
+  nginx:
+    image: nginx
+    volumes:
+    - nginx_config:/etc/nginx/templates
+    ports:
+    - "{{port}}:{{port}}"
+    environment:
+    - NGINX_HOST=foobar.com
+    - NGINX_PORT={{port}}
