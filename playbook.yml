@@ -1,0 +1,15 @@
+---
+- hosts: 127.0.0.1
+  tasks:
+    - name: Generate the container compose configuration file
+      template:
+        src: ./config/compose.yml.j2
+        dest: ./config/target/compose.yml
+    - name: NGINX server configurations
+      template:
+        src: ./config/nginx.conf.j2
+        dest: ./config/target/nginx.conf
+    - name: NGINX servers configurations
+      template:
+        src: ./config/server.conf.j2
+        dest: ./config/target/servers.conf

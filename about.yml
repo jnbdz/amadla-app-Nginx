@@ -1,0 +1,6 @@
+---
+version: 1
+about:
+  version: 1.0
+  description: NGINX is a http/s server that makes it easy to have a reverse proxy
+  
