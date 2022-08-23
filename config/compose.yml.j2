@@ -12,11 +12,11 @@ services:
     - nginx_www:/etc/nginx/templates:ro
     ports:
     {% for server in servers -%}
-    - "{{ server.internal.port }}:{{ server.port }}"
+      - "{{ server.internal.port }}:{{ server.port }}"
     {%- endfor %}
     environment:
-    - NGINX_HOST=foobar.com
-    - NGINX_PORT={{port}}
+      - NGINX_HOST=foobar.com
+      - NGINX_PORT={{port}}
     {% if dev.debug == true %}
     command: [nginx-debug, '-g', 'daemon off;']
     {% endif %}
