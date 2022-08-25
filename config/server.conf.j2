@@ -1,8 +1,9 @@
 {% for server in servers -%}
     {% if server.tls != true %}
         server {
-            listen       {{ server.port }};
-            listen       somename:8080;
+            listen       {{ server.port | default('80') }};
+            listen       somename:{{ server.port | default('80') }};;
+            listen       [::]:{{ server.port | default('80') }}; localhost ipv6only=on;
             server_name  somename  alias  another.alias;
 
             location {{ server.location }} {
@@ -12,14 +13,17 @@
         }
     {% else %}
         server {
-            listen       {{ server.port }} ssl; # 443
-            server_name  {{ server.server_name }};
+            listen       {{ server.port | default('80') }};
+            listen       [::]:{{ server.port | default('80') }} localhost ipv6only=on;
 
-            ssl_certificate      {{ server.ssl_cert_pem }}; # cert.pem;
-            ssl_certificate_key  {{ server.ssl_cert_key }}; # cert.key;
+            listen       {{ server.tls.port | default('443') }} ssl;
+            server_name  {{ server.tls.server_name }};
 
-            ssl_session_cache    shared:SSL:{{ server.ssl_session_cache_time }}; #1m;
-            ssl_session_timeout  {{ server.ssl_session_timeout }} #5m;
+            ssl_certificate      {{ server.tls.cert_pem }}; # cert.pem;
+            ssl_certificate_key  {{ server.tls.cert_key }}; # cert.key;
+
+            ssl_session_cache    shared:SSL:{{ server.tls.session_cache_time }}; #1m;
+            ssl_session_timeout  {{ server.tls.session_timeout }} #5m;
 
             ssl_ciphers  HIGH:!aNULL:!MD5;
             ssl_prefer_server_ciphers  on;
@@ -33,6 +37,7 @@
             location {{ server.location }} {
                 root   html;
                 index  index.html index.htm;
+                #try_files $uri $uri/ =404;
             }
         }
     {% endif %}

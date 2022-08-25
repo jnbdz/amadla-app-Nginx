@@ -7,9 +7,9 @@ services:
   nginx:
     image: nginx
     volumes:
-    - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
-    - nginx_config:/etc/nginx/conf:ro
-    - nginx_www:/etc/nginx/templates:ro
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - nginx_config:/etc/nginx/conf:ro
+      - nginx_www:/etc/nginx/templates:ro
     ports:
     {% for server in servers -%}
       - "{{ server.internal.port }}:{{ server.port }}"

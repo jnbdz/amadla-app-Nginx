@@ -1,6 +1,6 @@
 ---
 version: 1
-about:
+module:
   version: 1.0 # Based on Git tags
   description: NGINX is a http/s server that makes it easy to have a reverse proxy
   authors:
@@ -10,6 +10,15 @@ about:
     - server
     - http
     - proxy
-  requires:
-    - ansible
-    - jinja2
+  configuration:
+    network:
+      private:
+        ports:
+          protocol: tcp
+          internal: 8080
+          external: 8080
+      public:
+        ports:
+          protocol: tcp
+          internal: 8080
+          external: 80
