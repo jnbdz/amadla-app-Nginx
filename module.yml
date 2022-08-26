@@ -1,7 +1,6 @@
 ---
 version: 1
 module:
-  version: 1.0 # Based on Git tags
   description: NGINX is a http/s server that makes it easy to have a reverse proxy
   authors:
     - Jean-Nicolas Boulay (JN) <https://jean-nicolas.name>
@@ -12,13 +11,11 @@ module:
     - proxy
   configuration:
     network:
-      private:
-        ports:
-          protocol: tcp
-          internal: 8080
-          external: 8080
       public:
-        ports:
-          protocol: tcp
-          internal: 8080
-          external: 80
+        entries:
+          - location: /
+            ports:
+              - internal: 80
+                external: 80
+              - internal: 443
+                external: 443
